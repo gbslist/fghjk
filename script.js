@@ -1,0 +1,67 @@
+// 回到顶部按钮
+const backToTopBtn = document.querySelector('.back-to-top');
+
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 300) {
+        backToTopBtn.style.display = 'flex';
+    } else {
+        backToTopBtn.style.display = 'none';
+    }
+});
+
+backToTopBtn.addEventListener('click', () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+});
+
+// 侧边栏导航点击高亮 + 锚点平滑滚动
+const navLinks = document.querySelectorAll('.sidebar-nav a');
+
+navLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        // 移除所有active类
+        navLinks.forEach(item => item.classList.remove('active'));
+        // 给当前点击的添加active类
+        link.classList.add('active');
+        
+        // 锚点平滑滚动
+        const targetId = link.getAttribute('href');
+        if (targetId !== '#home') {
+            const targetSection = document.querySelector(targetId);
+            if (targetSection) {
+                targetSection.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
+        } else {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+    });
+});
+
+// 滚动时高亮对应导航
+window.addEventListener('scroll', () => {
+    const sections = document.querySelectorAll('.content-section');
+    let currentSection = '';
+    
+    sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
+        if (window.scrollY >= sectionTop - 100) {
+            currentSection = '#' + section.getAttribute('id');
+        }
+    });
+    
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === currentSection) {
+            link.classList.add('active');
+        }
+    });
+});
